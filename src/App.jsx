@@ -4,6 +4,7 @@ function App() {
       <h1 className="text-4xl font-bold text-blue-600">
         Vite + React + Tailwind CSS
       </h1>
+      <button className="btn btn-primary">Click me</button>
     </div>
   );
 }
