@@ -18,8 +18,14 @@ import { ErrorElement } from "./components";
 import { loader as landingLoader } from "./pages/Landing";
 import { loader as singleProductLoader } from "./pages/SingleProduct";
 import { loader as productsLoader } from "./pages/Products";
+import { loader as checkoutLoader } from "./pages/Checkout";
+import { store } from "./store";
 
 //actions
+import { action as registerAction } from "./pages/Register";
+import { action as loginAction } from "./pages/Login";
+import { action as checkoutAction } from "./components/CheckoutForm";
+import { loader as ordersLoader } from "./components/OrdersList";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -45,10 +51,15 @@ const router = createBrowserRouter([
       {
         path: "checkout",
         element: <Checkout />,
+        loader: checkoutLoader(store),
+        errorElement: <ErrorElement />,
+        action: checkoutAction(store),
       },
       {
         path: "orders",
-        element: <Orders />,
+        element: <OrdersList />,
+        loader: ordersLoader(store),
+        errorElement: <ErrorElement />,
       },
       {
         path: "products",
@@ -68,11 +79,13 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
     errorElement: <Error />,
+    action: registerAction,
   },
   {
     path: "/login",
     element: <Login />,
     errorElement: <Error />,
+    action: loginAction(store),
   },
 ]);
 const App = () => {

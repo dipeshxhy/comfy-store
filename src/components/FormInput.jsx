@@ -1,14 +1,17 @@
-const FormInput = ({ label, type, name, defaultValue }) => {
+const FormInput = ({ label, type, name, defaultValue, size }) => {
   return (
-    <fieldset className="fieldset">
-      <legend className="fieldset-legend">{label}</legend>
+    <div className="form-control">
+      <label htmlFor={name} className="label block">
+        <span className="label-text capitalize">{label}</span>
+      </label>
       <input
         type={type}
         name={name}
+        id={name}
+        className={`input input-bordered ${size} `}
         defaultValue={defaultValue}
-        className="input"
       />
-    </fieldset>
+    </div>
   );
 };
 export default FormInput;

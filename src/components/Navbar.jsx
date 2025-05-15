@@ -3,25 +3,13 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import Navlinks from "./Navlinks";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { toggleTheme } from "../features/user/userSlice";
 
-const themes = {
-  dracula: "dracula",
-  winter: "winter",
-};
-const getThemeFromLocalStorage = () => {
-  return localStorage.getItem("theme") || "dracula";
-};
 const Navbar = () => {
-  const [theme, setTheme] = useState(getThemeFromLocalStorage());
-  const toggleTheme = () => {
-    const { dracula, winter } = themes;
-    const newTheme = theme === dracula ? winter : dracula;
-    setTheme(newTheme);
-  };
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+  const { numItemsInCart } = useSelector((state) => state.cartState);
+  const dispatch = useDispatch();
   return (
     <nav className="bg-base-200">
       <div className="navbar align-element ">
@@ -54,7 +42,7 @@ const Navbar = () => {
         <div className="navbar-end">
           {/* THEME ICONS */}
           <label className="swap swap-rotate">
-            <input type="checkbox" onChange={toggleTheme} />
+            <input type="checkbox" onChange={() => dispatch(toggleTheme())} />
             <BsMoonFill className="swap-on fill-current size-4" />
             <BsSunFill className="swap-off fill-current size-4     " />
           </label>
@@ -63,7 +51,7 @@ const Navbar = () => {
             <div className="indicator">
               <BsCart3 className="h-6 w-6" />
               <span className="badge badge-sm badge-primary indicator-item">
-                8
+                {numItemsInCart}
               </span>
             </div>
           </NavLink>
