@@ -54,13 +54,13 @@ const Login = () => {
           label="Email"
           type="email"
           name="identifier"
-          defaultValue="test@test.com"
+          defaultValue=""
         />
         <FormInput
           label="Password"
           type="password"
           name="password"
-          defaultValue="password"
+          defaultValue=""
         />
         <div className="mt-4 flex flex-col gap-y-4">
           <SubmitBtn text="Login" />

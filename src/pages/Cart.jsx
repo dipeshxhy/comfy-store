@@ -18,7 +18,7 @@ const Cart = () => {
         <div className="lg:col-span-4 lg:ml-4">
           <CartTotals />
           {user ? (
-            <Link className="btn btn-primary btn-block mt-4">
+            <Link to="/checkout" className="btn btn-primary btn-block mt-4">
               proceed to checkout
             </Link>
           ) : (

@@ -5,11 +5,20 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addItem } from "../features/cart/cartSlice";
 
-export const loader = async ({ params }) => {
-  const resp = await customFetch(`/products/${params.id}`);
+const singleProductQuery = (id) => ({
+  queryKey: ["singleProduct", id],
+  queryFn: () => customFetch.get(`/products/${id}`),
+});
 
-  return { product: resp.data.data };
-};
+export const loader =
+  (queryClient) =>
+  async ({ params }) => {
+    const resp = await queryClient.ensureQueryData(
+      singleProductQuery(params.id)
+    );
+
+    return { product: resp.data.data };
+  };
 
 const SingleProduct = () => {
   const { product } = useLoaderData();

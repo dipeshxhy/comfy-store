@@ -1,11 +1,32 @@
 import { redirect, useLoaderData } from "react-router-dom";
 import { toast } from "react-toastify";
 import { customFetch } from "../utils";
-import { OrdersList, PaginationContainer, SectionTitle } from "../components";
+import {
+  OrdersList,
+  ComplexPaginationContainer,
+  SectionTitle,
+} from "../components";
 
+const ordersQuery = (params, user) => {
+  return {
+    queryKey: [
+      "orders",
+      params.page ? parseInt(params.page) : 1,
+      user.username,
+    ],
+    queryFn: async () =>
+      await customFetch.get("/orders", {
+        params,
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }),
+  };
+};
 export const loader =
-  (store) =>
+  (store, queryClient) =>
   async ({ request }) => {
+    console.log(store);
     const user = store.getState().userState.user;
 
     if (!user) {
@@ -16,12 +37,9 @@ export const loader =
       ...new URL(request.url).searchParams.entries(),
     ]);
     try {
-      const response = await customFetch.get("/orders", {
-        params,
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const response = await queryClient.ensureQueryData(
+        ordersQuery(params, user)
+      );
 
       return { orders: response.data.data, meta: response.data.meta };
     } catch (error) {
@@ -31,12 +49,23 @@ export const loader =
         "there was an error accessing your orders";
 
       toast.error(errorMessage);
-      if (error?.response?.status === 401 || 403) return redirect("/login");
+      if (error?.response?.status === 401 || error.response.status === 403)
+        return redirect("/login");
 
       return null;
     }
   };
 const Orders = () => {
-  return <h1 className="text-3xl">orders</h1>;
+  const { meta } = useLoaderData();
+  if (meta.pagination.total < 1) {
+    return <SectionTitle text="please make an order" />;
+  }
+  return (
+    <>
+      <SectionTitle text="your orders" />
+      <OrdersList />
+      <ComplexPaginationContainer />
+    </>
+  );
 };
 export default Orders;

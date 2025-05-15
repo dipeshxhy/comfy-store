@@ -6,7 +6,7 @@ import { clearCart } from "../features/cart/cartSlice";
 import { toast } from "react-toastify";
 
 export const action =
-  (store) =>
+  (store, queryClient) =>
   async ({ request }) => {
     const formData = await request.formData();
     const { name, address } = Object.fromEntries(formData);
@@ -32,7 +32,7 @@ export const action =
           },
         }
       );
-      console.log(resp);
+      queryClient.removeQueries({ queryKey: ["orders"] });
       store.dispatch(clearCart());
       toast.success("order placed successfully");
       return redirect("/orders");
